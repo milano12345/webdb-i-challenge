@@ -16,24 +16,25 @@ router.get("/", (req, res) => {
     });
 });
 
-router.get("/:id", validatePostId, (req, res) => {});
+router.get("/:id", (req, res) => {
+  db.select("*")
+    .from("accounts")
+    .where("id", req.params.id)
+    .then(accounts => {
+      if (accounts < 1) {
+        res.status(404).send({ message: "Account with matching ID not found" });
+      } else {
+        res.status(200).send(accounts);
+      }
+    });
+});
 
 router.delete("/:id", (req, res) => {});
 
-router.put("/", tooLong, (req, res) => {});
+router.put("/", (req, res) => {});
 
-router.post("/", tooLong, (req, res) => {});
+router.post("/", (req, res) => {});
 
 // custom middleware
-
-function validatePostId(req, res, next) {
-  dataBase.get(req.params.id).then(project => {
-    if (!project) {
-      res.status(404).send({ message: "No project with the specified ID" });
-    } else {
-      next();
-    }
-  });
-}
 
 module.exports = router;
