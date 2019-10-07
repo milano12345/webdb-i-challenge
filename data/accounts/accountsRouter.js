@@ -22,14 +22,23 @@ router.get("/:id", (req, res) => {
     .where("id", req.params.id)
     .then(accounts => {
       if (accounts < 1) {
-        res.status(404).send({ message: "Account with matching ID not found" });
+        res.status(404).send({ message: "No accounts matching provided ID" });
       } else {
         res.status(200).send(accounts);
       }
-    });
+    })
+    .catch(err => res.send(err));
 });
 
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", (req, res) => {
+  db.delete("*")
+    .from("accounts")
+    .where("id", req.params.id)
+    .then(accounts => {
+      res.status(200).send({ message: "Account was deleted" });
+    })
+    .catch(err => res.send(err));
+});
 
 router.put("/", (req, res) => {});
 
